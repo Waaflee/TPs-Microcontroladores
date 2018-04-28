@@ -1,0 +1,3 @@
+[submodule "GPIO/GPIO/ejercicio_1/lib/AVRDuino"]
+	path = GPIO/GPIO/ejercicio_1/lib/AVRDuino
+	url = git@github.com:Waaflee/AVRDuino.git
