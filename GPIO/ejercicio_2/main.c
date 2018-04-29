@@ -7,7 +7,7 @@
 #include <util/delay.h>
 #define FALSE 0
 #define TRUE 1
-#define READ 2
+#define READ 11
 int main(void) {
   setPin(10, OUTPUT);
   setPin(13, OUTPUT);
@@ -15,19 +15,16 @@ int main(void) {
 
   // PCICR = _BV(PCIE0);
   // PCMSK0 = _BV(PORTB3);
-  setPCInt(A(READ));
+  setPCInt(READ);
   sei();
 
   while (1) {
-    // if (readDPin(11)) {
-    //   togglePin(10);
-    // }
     togglePin(13);
     _delay_ms(500);
   }
 }
 
-ISR(PCINT1_vect) {
+ISR(PCINT0_vect) {
   _delay_ms(10);
   if (readDPin(READ)) {
     togglePin(10);
