@@ -7,3 +7,6 @@
 [submodule "GPIO/ejercicio_3/lib/AVRDuino"]
 	path = GPIO/ejercicio_3/lib/AVRDuino
 	url = git@github.com:Waaflee/AVRDuino.git
+[submodule "Interrupciones/ejercico_4/lib/AVRDuino"]
+	path = Interrupciones/ejercico_4/lib/AVRDuino
+	url = git@github.com:Waaflee/AVRDuino.git
