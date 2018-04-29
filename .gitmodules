@@ -1,3 +1,6 @@
-[submodule "GPIO/GPIO/ejercicio_1/lib/AVRDuino"]
-	path = GPIO/GPIO/ejercicio_1/lib/AVRDuino
+[submodule "GPIO/ejercicio_1/lib/AVRDuino"]
+	path = GPIO/ejercicio_1/lib/AVRDuino
+	url = git@github.com:Waaflee/AVRDuino.git
+[submodule "GPIO/ejercicio_2/lib/AVRDuino"]
+	path = GPIO/ejercicio_2/lib/AVRDuino
 	url = git@github.com:Waaflee/AVRDuino.git
