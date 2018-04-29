@@ -15,7 +15,7 @@ int main(void) {
 
   // PCICR = _BV(PCIE0);
   // PCMSK0 = _BV(PORTB3);
-  setPCInt(READ);
+  setPCInt(A(READ));
   sei();
 
   while (1) {
