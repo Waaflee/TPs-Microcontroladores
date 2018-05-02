@@ -14,11 +14,6 @@ volatile int count[NUM_STEPPERS];
 volatile int delay;
 STEPPER *PAParray[NUM_STEPPERS];
 
-ISR(USART_RX_vect) {
-  uData = uread(&uart_io);
-  printf("%c\n", uData);
-}
-
 int main(void) {
   stdout = stdin = &uart_io;
   UART_init();
@@ -41,11 +36,12 @@ int main(void) {
 
   setPin(13, OUTPUT);
   char message;
+  int i = 0;
   while (1) {
     /* code */
     togglePin(13);
-    _delay_ms(500);
-    // printf("%s\n", "Holii\r");
+    _delay_ms(5000);
+    printf("%s %d\n", "Holii\r", i++);
   }
   return 0;
 }
@@ -95,6 +91,26 @@ ISR(PCINT0_vect) {
   _delay_ms(10);
   if (readDPin(8) || readDPin(9)) {
     stopPololu(PAParray[0]);
-    rotateNSteps(10, PAParray[0], !PAParray[0]->motor->direction);
+    rotateNSteps(5, PAParray[0], !PAParray[0]->motor->direction);
   }
+}
+
+ISR(USART_RX_vect) {
+  togglePin(3);
+  // char ReceivedByte;
+  // ReceivedByte =
+  //     UDR0; // Fetch the recieved byte value into the variable "ByteReceived"
+  // UDR0 = ReceivedByte;
+  // uData = uread(&uart_io);
+  printf("%s", "Recibido");
+  // printf("%c\n", uData);
+  // char Dato;
+  // Dato = uread(&uart_io);
+  // switch (Dato) {
+  // case 0:
+  //   togglePin(3);
+  //   break;
+  // default:
+  //   togglePin(3);
+  // }
 }
