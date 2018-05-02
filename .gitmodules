@@ -10,3 +10,6 @@
 [submodule "Interrupciones/ejercico_4/lib/AVRDuino"]
 	path = Interrupciones/ejercico_4/lib/AVRDuino
 	url = git@github.com:Waaflee/AVRDuino.git
+[submodule "UART/ejercicio_1/lib/AVRDuino"]
+	path = UART/ejercicio_1/lib/AVRDuino
+	url = git@github.com:Waaflee/AVRDuino.git
