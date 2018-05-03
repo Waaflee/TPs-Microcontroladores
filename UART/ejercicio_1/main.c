@@ -3,8 +3,6 @@
 #include "./lib/AVRDuino/core.h"
 #include "./lib/AVRDuino/uart.h"
 #include <util/delay.h>
-#define FALSE 0
-#define TRUE 1
 
 FILE uart_io = FDEV_SETUP_STREAM(uecho, uread, _FDEV_SETUP_RW);
 
@@ -13,11 +11,12 @@ int main(void) {
   UARTcount = 0;
   UART_init();
 
-  DriveArray STPArray1 = {2, 3, 4, 0, 0, 0, 1.8, 30};
+  DriveArray STPArray1 = {2, 3, 4, 0, 0, 0, 1.8, 1200};
   pololu STP1 = newPololuFA(STPArray1);
   STEPPER PAP1;
   PAP1.motor = &STP1;
   PAP1.enabled = 0;
+  PAP1.ID = 0;
   PAParray[0] = &PAP1;
 
   setPCInt(9);
@@ -27,8 +26,10 @@ int main(void) {
   // sei() incluida en el setTimer0 dado que si utilizamos el timere
   // inherentemente vamos a querer las interrupciones.
 
-  setSpeed(1200, &PAP1);
-  rotateNSteps(200, &PAP1, FORWARD);
+  // setSpeed(1200, &PAP1);
+  // rotateNSteps(200, &PAP1, FORWARD);
+
+  PAPsInit();
 
   setPin(13, OUTPUT);
   while (1) {
@@ -41,7 +42,10 @@ int main(void) {
 
 ISR(PCINT0_vect) {
   _delay_ms(10);
-  if (readDPin(8) || readDPin(9)) {
-    raceEnd(0);
+  if (readDPin(8)) {
+    raceEnd(0, START);
+  }
+  if (readDPin(9)) {
+    raceEnd(0, END);
   }
 }
