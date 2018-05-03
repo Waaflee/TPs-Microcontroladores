@@ -26,9 +26,6 @@ int main(void) {
   // sei() incluida en el setTimer0 dado que si utilizamos el timere
   // inherentemente vamos a querer las interrupciones.
 
-  // setSpeed(1200, &PAP1);
-  // rotateNSteps(200, &PAP1, FORWARD);
-
   PAPsInit();
 
   setPin(13, OUTPUT);
