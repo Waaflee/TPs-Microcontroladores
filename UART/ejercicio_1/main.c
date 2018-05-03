@@ -24,14 +24,13 @@ int main(void) {
   setPCInt(8);
 
   setTimer0(T0_PRESCALER_1024);
-  // sei();
+  // sei() incluida en el setTimer0 dado que si utilizamos el timere
+  // inherentemente vamos a querer las interrupciones.
 
   setSpeed(1200, &PAP1);
   rotateNSteps(200, &PAP1, FORWARD);
 
   setPin(13, OUTPUT);
-  char message;
-  int i = 0;
   while (1) {
     /* code */
     togglePin(13);
@@ -40,78 +39,9 @@ int main(void) {
   return 0;
 }
 
-// Timer0 overflow interruption, checks enabled steppers setep's left and
-// moves them accordingly until there is no one left.
-ISR(TIMER0_OVF_vect, ISR_NOBLOCK) {
-  // increases each stepper's count assigned variable
-  for (uint8_t i = 0; i < NUM_STEPPERS; i++) {
-    count[i]++;
-    // check if current stepper is enabled
-    if (PAParray[i]->enabled) {
-      // check if current stepper has any steps left (checking could be merged
-      // with above's conditional but I think this way is more readable).
-      if (PAParray[i]->motor->stepps > 0) {
-        // Calculates amount of overflows until next stepp accordingly to
-        // current stepper's RPM
-        if (PAParray[i]->motor->stepps > PAParray[i]->motor->accelStepps[1]) {
-
-          delay = (60.0 / (float)((float)PAParray[i]->motor->RPM -
-                                  ((float)PAParray[i]->motor->RPM /
-                                   (float)PAParray[i]->motor->accelStepps[0]) *
-                                      (PAParray[i]->motor->stepps -
-                                       PAParray[i]->motor->accelStepps[1]))) *
-                  61.0;
-
-        } else if (PAParray[i]->motor->stepps <=
-                       PAParray[i]->motor->accelStepps[1] &&
-                   PAParray[i]->motor->stepps >=
-                       PAParray[i]->motor->accelStepps[0]) {
-
-          delay = (60.0 / (float)PAParray[i]->motor->RPM) * 61.0;
-
-        } else if (PAParray[i]->motor->stepps <
-                   PAParray[i]->motor->accelStepps[0]) {
-
-          delay = (60.0 / (float)(((float)PAParray[i]->motor->RPM /
-                                   (float)PAParray[i]->motor->accelStepps[0]) *
-                                  (PAParray[i]->motor->stepps))) *
-                  61.0;
-
-        } else {
-          delay = (60.0 / (float)PAParray[i]->motor->RPM) * 61.0;
-        }
-        // in order to emulate a square shaped wave, the stepper's step pin will
-        // turn on in the middle of the dealy and turn off again at it's end.
-        if (count[i] >= delay / 2) {
-          pinOn(PAParray[i]->motor->step);
-          if (count[i] >= delay) {
-            PAParray[i]->motor->stepps--;
-            pinOff(PAParray[i]->motor->step);
-            count[i] = 0;
-            // Checks current direction and upgrades position accordingly
-            if (PAParray[i]->motor->direction) {
-              PAParray[i]->motor->location++;
-            } else {
-              PAParray[i]->motor->location--;
-            }
-            // if there are not stepps left the current stepper will be
-            // disabled.
-            if (PAParray[i]->motor->stepps == 0) {
-              PAParray[i]->enabled = FALSE;
-              pinOff(PAParray[i]->motor->enable);
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
 ISR(PCINT0_vect) {
   _delay_ms(10);
   if (readDPin(8) || readDPin(9)) {
-    stopPololu(PAParray[0]);
-    setSpeed(60, PAParray[0]);
-    rotateNSteps(8, PAParray[0], !PAParray[0]->motor->direction);
+    raceEnd(0);
   }
 }
