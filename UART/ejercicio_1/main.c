@@ -7,15 +7,10 @@
 #define TRUE 1
 
 FILE uart_io = FDEV_SETUP_STREAM(uecho, uread, _FDEV_SETUP_RW);
-volatile char uData;
-
-#define NUM_STEPPERS 1
-volatile int count[NUM_STEPPERS];
-volatile int delay;
-STEPPER *PAParray[NUM_STEPPERS];
 
 int main(void) {
   stdout = stdin = &uart_io;
+  UARTcount = 0;
   UART_init();
 
   DriveArray STPArray1 = {2, 3, 4, 0, 0, 0, 1.8, 30};
@@ -39,9 +34,8 @@ int main(void) {
   int i = 0;
   while (1) {
     /* code */
-    // togglePin(13);
-    // _delay_ms(5000);
-    // printf("%s %d\n", "Holii\r", i++);
+    togglePin(13);
+    _delay_ms(5000);
   }
   return 0;
 }
@@ -117,26 +111,7 @@ ISR(PCINT0_vect) {
   _delay_ms(10);
   if (readDPin(8) || readDPin(9)) {
     stopPololu(PAParray[0]);
-    rotateNSteps(5, PAParray[0], !PAParray[0]->motor->direction);
+    setSpeed(60, PAParray[0]);
+    rotateNSteps(8, PAParray[0], !PAParray[0]->motor->direction);
   }
-}
-
-ISR(USART_RX_vect) {
-  togglePin(3);
-  // char ReceivedByte;
-  // ReceivedByte =
-  //     UDR0; // Fetch the recieved byte value into the variable "ByteReceived"
-  // UDR0 = ReceivedByte;
-  // uData = uread(&uart_io);
-  printf("%s", "Recibido");
-  // printf("%c\n", uData);
-  // char Dato;
-  // Dato = uread(&uart_io);
-  // switch (Dato) {
-  // case 0:
-  //   togglePin(3);
-  //   break;
-  // default:
-  //   togglePin(3);
-  // }
 }
