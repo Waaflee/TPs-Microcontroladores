@@ -1,5 +1,5 @@
 # TPs-Microcontroladores
-___
+
 ## Ejercicios de la cátedra Microcontroladores y Electrónica de Potencia de la UNCuyo - Cursado 2018
 
 
@@ -18,7 +18,6 @@ Posteriormente los contenidos pueden actualizarse normalemente con:
 Para actualizar los submodulos se emplea:
 
     git submodule update
-___
 
 ## Prácticos
 
