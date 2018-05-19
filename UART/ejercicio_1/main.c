@@ -11,7 +11,7 @@ int main(void) {
   UARTcount = 0;
   UART_init();
 
-  DriveArray STPArray1 = {2, 3, 4, 0, 0, 0, 1.8, 1};
+  DriveArray STPArray1 = {2, 3, 4, 0, 0, 0, 1.8, 10};
   pololu STP1 = newPololuFA(STPArray1);
   STEPPER PAP1;
   PAP1.motor = &STP1;
@@ -26,8 +26,8 @@ int main(void) {
   // sei() incluida en el setTimer0 dado que si utilizamos el timere
   // inherentemente vamos a querer las interrupciones.
 
-  // PAPsInit();
-  rotateNSteps(30, PAParray[0], FORWARD);
+  PAPsInit();
+  // rotateNSteps(30, PAParray[0], FORWARD);
 
   setPin(13, OUTPUT);
   while (1) {
