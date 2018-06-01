@@ -1,4 +1,4 @@
-#define NUM_STEPPERS 1
+#define NUM_STEPPERS 2
 #define INIT_STEPPS 30000
 
 unsigned short int UARTSetted;
