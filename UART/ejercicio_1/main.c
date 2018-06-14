@@ -19,14 +19,6 @@ int main(void) {
   PAP1.ID = 0;
   PAParray[0] = &PAP1;
 
-  DriveArray STPArray2 = {5, 6, 7, 0, 0, 0, 1.8, 1};
-  pololu STP2 = newPololuFA(STPArray2);
-  STEPPER PAP2;
-  PAP2.motor = &STP2;
-  PAP2.enabled = 0;
-  PAP2.ID = 1;
-  PAParray[1] = &PAP2;
-
   setPCInt(9);
   setPCInt(8);
 
