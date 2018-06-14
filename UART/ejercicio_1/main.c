@@ -40,14 +40,14 @@ int main(void) {
   while (1) {
     /* code */
     togglePin(13);
-    _delay_ms(5000);
+    _delay_ms(500);
   }
   return 0;
 }
 
 ISR(PCINT0_vect) {
   _delay_ms(15);
-  if (!readDPin(8)) {
+  if (readDPin(8)) {
     raceEnd(0, START);
   }
   if (readDPin(9)) {
