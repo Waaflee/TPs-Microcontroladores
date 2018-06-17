@@ -14,6 +14,6 @@
 	path = UART/ejercicio_1/lib/AVRDuino
 	url = git@github.com:Waaflee/AVRDuino.git
 	ignore = dirty
-[submodule "SPI/ejercicio-1/lib/AVRDuino"]
-	path = SPI/ejercicio-1/lib/AVRDuino
+[submodule "SPI/comunicacion-esp8266/lib/AVRDuino"]
+	path = SPI/comunicacion-esp8266/lib/AVRDuino
 	url = git@github.com:Waaflee/AVRDuino.git
