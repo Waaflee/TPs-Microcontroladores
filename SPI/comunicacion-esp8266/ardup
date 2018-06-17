@@ -1,7 +1,7 @@
 #!/bin/zsh
 
-files=( core A4988 uart timers pwm )
-customfiles=( command_interpreter )
+files=( core )
+customfiles=( )
 
 
 if [ ! -d build ]; then
