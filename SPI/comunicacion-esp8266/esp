@@ -6,7 +6,7 @@ case "$1" in
   echo 'Opening com...'
   killall picocom
   picocom /dev/ttyUSB1 -b 115200
-  break
+  ;;
   up)
   killall picocom
   echo 'Uploading boot.py...'
@@ -15,5 +15,10 @@ case "$1" in
     echo 'Uploading main.py...'
     ampy -p /dev/ttyUSB1 put main.py
   fi
-  break
+  ;;
+  *)
+  echo 'command not found try on of these:'
+  echo "  com : opens picocom entangled with the board"
+  echo "  up  : upload scripts to the board"
+  ;;
 esac
