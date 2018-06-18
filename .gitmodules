@@ -26,3 +26,6 @@
 [submodule "TIMERS/ejercicio_1/lib/AVRDuino"]
 	path = TIMERS/ejercicio_1/lib/AVRDuino
 	url = git@github.com:Waaflee/AVRDuino.git
+[submodule "TIMERS/ejercicio_2/lib/AVRDuino"]
+	path = TIMERS/ejercicio_2/lib/AVRDuino
+	url = git@github.com:Waaflee/AVRDuino.git
