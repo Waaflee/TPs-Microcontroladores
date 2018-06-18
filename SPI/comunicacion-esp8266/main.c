@@ -1,10 +1,8 @@
 #include "./lib/AVRDuino/core.h"
-#include "./lib/AVRDuino/uart.h"
 #include <stdio.h>
 #include <util/delay.h>
 
-// void commads(char data[]);
-
+void sendToDAC(uint16_t valor);
 #define SS 10
 enum SPI_prescaler {
   x4 = 0,
@@ -22,39 +20,45 @@ void SPInit(enum SPI_mode mode, enum SPI_prescaler PS) {
   SPCR = (1 << SPE) | mode | PS;
 }
 
-int spiecho(char c, FILE *stream) {
+int spiecho(int c) {
   SPDR = c;
   while (!(SPSR & (1 << SPIF))) {
   };
   return 0;
 };
 
-int spiread(FILE *stream) {
+int spiread() {
   while (!(SPSR & (1 << SPIF))) {
   };
   return SPDR;
 };
 
-// FILE spi_io = FDEV_SETUP_STREAM(spiecho, spiread, _FDEV_SETUP_RW);
-// FILE uart_io = FDEV_SETUP_STREAM(uecho, uread, _FDEV_SETUP_RW);
-
 int main(void) {
 
-  // stdout = stdin = &uart_io;
-  // UART_init(commads);
   setPin(10, OUTPUT);
   while (1) {
 
     SPInit(master, x16); // baudrate = 1000000
 
     for (uint16_t i = 0; i < 4096; i++) {
-      fprintf(&spi_io, "%d", i);
-      _delay_us(20);
+      sendToDAC(i);
     }
   }
   return 0;
 }
 
-// void commads(char data[]){
-//
-// };
+void sendToDAC(uint16_t valor) {
+  uint8_t aux;
+  pinOff(SS); // Habilita MCP4821
+  aux = 0b01110000 |
+        ((valor & 0xF00) >> 8);  // 4 bits de control y b11 a b8 de valor
+  spiecho(aux);                  // transmite por SPI
+  aux = (uint8_t)(valor & 0xFF); // b7 a b0 de valor
+  spiecho(aux);                  // transmite por SPI
+  _delay_us(1);
+  pinOn(SS); // deshabilita MCP4821
+  _delay_us(1);
+  pinOff(8);    //
+  _delay_us(2); // Pulso invertido en LDA de MCP4821
+  pinOn(8);     //
+}

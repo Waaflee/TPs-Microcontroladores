@@ -5,7 +5,7 @@
 #include "../AVRDuino/A4988.h"
 
 
-enum estados {activado, desactivado};
+enum estados {activado, desactivado, homing, posicionado};
 volatile extern enum estados estado;
 
 void Conditional_PaPsInit(uint16_t speed);

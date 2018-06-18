@@ -107,6 +107,7 @@ void goTorel(int percentage, STEPPER *drive) {
   int position = ((float)percentage / 100) * drive->motor->MaxSteps;
   goToabs(position, drive);
 }
+#include "../custom/command_interpreter.h"
 
 void stopPololu(STEPPER *drive) {
   if (drivesInit.onSetup) {
@@ -116,6 +117,7 @@ void stopPololu(STEPPER *drive) {
       drivesInit.setted++;
       if (drivesInit.setted == NUM_STEPPERS) {
         drivesInit.onSetup = FALSE;
+        estado = posicionado;
 #ifdef UART_DEBBUG
 #include "uart.h"
         if (UARTSetted) {
@@ -147,14 +149,13 @@ void raceEnd(uint8_t drive, uint8_t which) {
   }
 }
 void PAPsInit(uint8_t speed) {
+  estado = homing;
   drivesInit.onSetup = TRUE;
   for (uint8_t i = 0; i < NUM_STEPPERS; i++) {
     setSpeed(speed, PAParray[i]);
     rotateNSteps(INIT_STEPPS, PAParray[i], FORWARD);
   }
 }
-
-#ifdef POLOLU
 
 volatile int RPM;
 volatile int count[NUM_STEPPERS];
@@ -174,51 +175,31 @@ ISR(TIMER0_OVF_vect, ISR_NOBLOCK) {
         // Calculates amount of overflows until next stepp accordingly to
         // current stepper's RPM
         if (PAParray[i]->motor->stepps > PAParray[i]->motor->accelStepps[1]) {
-
-          RPM = PAParray[i]->motor->RPM -
-                (1000 * PAParray[i]->motor->RPM /
-                 PAParray[i]->motor->accelStepps[0]) *
-                    (PAParray[i]->motor->stepps -
-                     PAParray[i]->motor->accelStepps[1]) /
-                    1000;
-
-        } else if ((PAParray[i]->motor->stepps <=
-                    PAParray[i]->motor->accelStepps[1]) &&
-                   (PAParray[i]->motor->stepps >=
-                    PAParray[i]->motor->accelStepps[0])) {
-
-          RPM = PAParray[i]->motor->RPM;
-
-        } else if (PAParray[i]->motor->stepps <
-                   PAParray[i]->motor->accelStepps[0]) {
-
-          RPM = ((1000 * PAParray[i]->motor->RPM /
-                  PAParray[i]->motor->accelStepps[0]) *
-                 PAParray[i]->motor->stepps) /
-                1000;
-        }
-        // //Calculo para RPMs
-        // delay = (60 * (7812 / PAParray[i]->motor->PPV)) / RPM;
-        delay = 63 * PAParray[i]->motor->RPM;
-        // in order to emulate a square shaped wave, the stepper's step pin will
-        // turn on in the middle of the dealy and turn off again at it's end.
-        if (count[i] >= delay / 2) {
-          pinOn(PAParray[i]->motor->step);
-          if (count[i] >= delay) {
-            PAParray[i]->motor->stepps--;
-            pinOff(PAParray[i]->motor->step);
-            count[i] = 0;
-            // Checks current direction and upgrades position accordingly
-            if (PAParray[i]->motor->direction) {
-              PAParray[i]->motor->location++;
-            } else {
-              PAParray[i]->motor->location--;
-            }
-            // if there are not stepps left the current stepper will be
-            // disabled.
-            if (PAParray[i]->motor->stepps == 0) {
-              PAParray[i]->enabled = FALSE;
-              pinOn(PAParray[i]->motor->enable);
+          delay = 6 * PAParray[i]->motor->RPM;
+          // sin prescaler el overflow ocurre a 62500 HZ,
+          // para aceptar la consigna en decima de ms
+          // debemos multiplicar por 6 ~10000Hz = 0.1ms
+          // in order to emulate a square shaped wave, the stepper's step pin
+          // will turn on in the middle of the dealy and turn off again at it's
+          // end.
+          if (count[i] >= delay / 2) {
+            pinOn(PAParray[i]->motor->step);
+            if (count[i] >= delay) {
+              PAParray[i]->motor->stepps--;
+              pinOff(PAParray[i]->motor->step);
+              count[i] = 0;
+              // Checks current direction and upgrades position accordingly
+              if (PAParray[i]->motor->direction) {
+                PAParray[i]->motor->location++;
+              } else {
+                PAParray[i]->motor->location--;
+              }
+              // if there are not stepps left the current stepper will be
+              // disabled.
+              if (PAParray[i]->motor->stepps == 0) {
+                PAParray[i]->enabled = FALSE;
+                pinOn(PAParray[i]->motor->enable);
+              }
             }
           }
         }
@@ -226,4 +207,3 @@ ISR(TIMER0_OVF_vect, ISR_NOBLOCK) {
     }
   }
 }
-#endif

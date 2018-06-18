@@ -32,13 +32,17 @@ int main(void) {
 
   UART_init(checkData);
   setPin(11, OUTPUT);
-  DriveArray STPArray1 = {8, 9, 10, 0, 11, 0, 1.8, 3};
+  DriveArray STPArray1 = {8, 9, 10, 0, 11, 0, 1.8, 10000};
   pololu STP1 = newPololuFA(STPArray1);
   STEPPER PAP1;
   PAP1.motor = &STP1;
   PAP1.enabled = 0;
   PAParray[0] = &PAP1;
-  setTimer0(x1);
+  // set up timer with no prescaling
+  TCCR0B |= (1 << CS00);
+  TIMSK0 = _BV(TOIE0);
+  // initialize counter
+  TCNT0 = 0;
 
   setPCInt(6);
   setPCInt(12);
@@ -54,6 +58,10 @@ int main(void) {
       break;
     case desactivado:
       pinOn(PAParray[0]->motor->enable);
+      break;
+    case homing:
+      break;
+    case posicionado:
       break;
     default:
       estado = desactivado;

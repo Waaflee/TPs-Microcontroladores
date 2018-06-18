@@ -12,7 +12,7 @@
 #include "command_interpreter.h"
 
 void checkData(char data[]) {
-  char temp[4];
+  char temp[10];
   uint16_t arg;
 
   // evitamos repetición de codigo precalculando el valor numerico de la orden
@@ -52,11 +52,15 @@ void checkData(char data[]) {
       printf("El motor esta desactivado, no se puede referenciar\n");
       printf("Para habilitarlo ingrese :W1\n");
       break;
+    case homing:
+      printf("Homing actualmente en proceso...\n");
     }
     break;
   case 'P':
-    if (estado == activado) {
+    if (estado == posicionado) {
       goToabs(arg, PAParray[0]);
+    } else {
+      printf("Debes realizar homing antes, ejecuta :H\n");
     }
     break;
   case 'F':
