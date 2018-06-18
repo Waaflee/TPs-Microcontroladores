@@ -31,7 +31,7 @@ int main(void) {
 
   UART_init(checkData);
 
-  DriveArray STPArray1 = {8, 9, 10, 0, 0, 0, 1.8, 3};
+  DriveArray STPArray1 = {8, 9, 10, 0, 11, 0, 1.8, 3};
   pololu STP1 = newPololuFA(STPArray1);
   STEPPER PAP1;
   PAP1.motor = &STP1;
@@ -39,7 +39,7 @@ int main(void) {
   PAParray[0] = &PAP1;
 
   setPCInt(6);
-  setPCInt(7);
+  setPCInt(12);
 
   sei();
 
@@ -63,20 +63,24 @@ int main(void) {
 }
 
 void findecarrera1() {
-  if (readDPin(2)) {
+  if (readDPin(12)) {
     togglePin(13);
     raceEnd(0, START);
   };
 }
 void findecarrera2() {
-  if (readDPin(3)) {
+  if (readDPin(6)) {
     togglePin(13);
     raceEnd(0, END);
   };
 };
 
 ISR(PCINT2_vect) {
-  _delay_ms(15);
-  findecarrera1();
+  _delay_ms(10);
   findecarrera2();
+};
+
+ISR(PCINT0_vect) {
+  _delay_ms(10);
+  findecarrera1();
 };

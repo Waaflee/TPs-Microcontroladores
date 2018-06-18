@@ -1,6 +1,7 @@
 #pragma once
 #include "../AVRDuino/core.h"
 #include "../AVRDuino/timers.h"
+#include "../AVRDuino/uart.h"
 #include "../AVRDuino/A4988.h"
 
 
