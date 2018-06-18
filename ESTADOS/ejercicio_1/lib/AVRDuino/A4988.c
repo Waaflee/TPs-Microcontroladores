@@ -197,8 +197,9 @@ ISR(TIMER0_OVF_vect, ISR_NOBLOCK) {
                  PAParray[i]->motor->stepps) /
                 1000;
         }
-
-        delay = (60 * (7812 / PAParray[i]->motor->PPV)) / RPM;
+        // //Calculo para RPMs
+        // delay = (60 * (7812 / PAParray[i]->motor->PPV)) / RPM;
+        delay = 63 * PAParray[i]->motor->RPM;
         // in order to emulate a square shaped wave, the stepper's step pin will
         // turn on in the middle of the dealy and turn off again at it's end.
         if (count[i] >= delay / 2) {
@@ -217,7 +218,7 @@ ISR(TIMER0_OVF_vect, ISR_NOBLOCK) {
             // disabled.
             if (PAParray[i]->motor->stepps == 0) {
               PAParray[i]->enabled = FALSE;
-              pinOff(PAParray[i]->motor->enable);
+              pinOn(PAParray[i]->motor->enable);
             }
           }
         }

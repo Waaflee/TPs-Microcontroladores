@@ -34,11 +34,9 @@ void checkData(char data[]) {
     switch (data[2]) {
     case '0':
       estado = desactivado;
-      TCCR0B = 0;
       break;
     case '1':
       estado = activado;
-      setTimer0(x8);
       break;
     default:
       printf("ingrese 0 para desabilitar o 1 para habilitar\n");
@@ -68,6 +66,7 @@ void checkData(char data[]) {
     rotateNSteps(arg, PAParray[0], BACKWARD);
     break;
   case 'T':
+    setSpeed(arg, PAParray[0]);
     break;
   case 'S':
     switch (estado) {

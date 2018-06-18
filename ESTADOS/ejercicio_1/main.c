@@ -14,6 +14,7 @@
 #include "./lib/AVRDuino/A4988.h"
 #include "./lib/AVRDuino/core.h"
 #include "./lib/AVRDuino/interrupts.h"
+#include "./lib/AVRDuino/pwm.h"
 #include "./lib/AVRDuino/timers.h"
 #include "./lib/AVRDuino/uart.h"
 #include "lib/custom/command_interpreter.h"
@@ -30,13 +31,14 @@ int main(void) {
   stdout = stdin = &uart_io;
 
   UART_init(checkData);
-
+  setPin(11, OUTPUT);
   DriveArray STPArray1 = {8, 9, 10, 0, 11, 0, 1.8, 3};
   pololu STP1 = newPololuFA(STPArray1);
   STEPPER PAP1;
   PAP1.motor = &STP1;
   PAP1.enabled = 0;
   PAParray[0] = &PAP1;
+  setTimer0(x1);
 
   setPCInt(6);
   setPCInt(12);
@@ -44,7 +46,6 @@ int main(void) {
   sei();
 
   setPin(13, OUTPUT);
-  printf("Setup complete\n");
 
   while (1) {
     switch (estado) {
