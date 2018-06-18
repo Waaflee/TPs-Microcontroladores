@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-files=( core A4988 uart timers pwm interrupts )
+files=( core uart )
 customfiles=( command_interpreter )
 
 

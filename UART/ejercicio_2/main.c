@@ -1,29 +1,36 @@
-#include "./lib/AVRDuino/A4988.h"
+// Realizar un oscilador con semiperíodo ajustable por consignas por UART de
+// tipo “:Txx”, con xx tiempo en décimas de segundo de 1 a 99 ((0,1 9,9
+// segundos). La recepción de datos no debe detener el funcionamiento del
+// oscilador. while(1) { S=1;_delay_ms(T);S=0;_delay_ms(T);} //S pin de salida
+
 #include "./lib/AVRDuino/core.h"
 #include "./lib/AVRDuino/uart.h"
-#include "./lib/AVRDuino/pwm.h"
-#include "./lib/AVRDuino/timers.h"
-#include "./lib/AVRDuino/interrupts.h"
 #include "lib/custom/command_interpreter.h"
 #include <util/delay.h>
+
+void delay_ds(uint8_t T);
 
 FILE uart_io = FDEV_SETUP_STREAM(uecho, uread, _FDEV_SETUP_RW);
 
 int main(void) {
   stdout = stdin = &uart_io;
   UART_init(checkData);
-  // DriveArray STPArray1 = {2, 3, 4, 0, 0, 0, 1.8, 30};
-  // pololu STP1 = newPololuFA(STPArray1);
-  // STEPPER PAP1;
-  // PAP1.motor = &STP1;
-  // PAP1.enabled = 0;
-  // PAParray[0] = &PAP1;
+  sei();
+  T = 10;
 
   setPin(13, OUTPUT);
+
   while (1) {
-    /* code */
-    togglePin(13);
-    _delay_ms(500);
+    pinOn(13);
+    delay_ds(T);
+    pinOff(13);
+    delay_ds(T);
   }
   return 0;
+}
+
+void delay_ds(uint8_t T) {
+  for (size_t i = 0; i < T; i++) {
+    _delay_ms(100);
+  }
 }
