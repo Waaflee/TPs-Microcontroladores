@@ -5,8 +5,12 @@ void checkData(char data[]) {
   case 'W':
     switch (data[2]) {
     case '0':
+      estado = desactivado;
+      TCCR0B = 0;
       break;
     case '1':
+      estado = activado;
+      setTimer0(x8);
       break;
     default:
       printf("ingrese 0 para desabilitar o 1 para habilitar\n");
@@ -16,7 +20,7 @@ void checkData(char data[]) {
   case 'H':
     switch (estado) {
     case activado:
-      PAPsInit(5);
+      Conditional_PaPsInit(8);
       break;
     case desactivado:
       printf("El motor esta desactivado, no se puede referenciar\n");
@@ -25,7 +29,19 @@ void checkData(char data[]) {
     }
     break;
   default:
-    printf("Command not found");
+    printf("Command not found\n");
+    break;
+  }
+}
+
+void Conditional_PaPsInit(uint16_t speed) {
+  switch (estado) {
+  case activado:
+    PAPsInit(speed);
+    break;
+  case desactivado:
+    break;
+  default:
     break;
   }
 }

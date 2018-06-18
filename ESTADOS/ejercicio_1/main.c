@@ -14,7 +14,6 @@
 #include "./lib/AVRDuino/A4988.h"
 #include "./lib/AVRDuino/core.h"
 #include "./lib/AVRDuino/interrupts.h"
-#include "./lib/AVRDuino/pwm.h"
 #include "./lib/AVRDuino/timers.h"
 #include "./lib/AVRDuino/uart.h"
 #include "lib/custom/command_interpreter.h"
@@ -27,17 +26,25 @@ void findecarrera1();
 void findecarrera2();
 
 int main(void) {
-  setINT(2, RISING, findecarrera1);
-  setINT(3, RISING, findecarrera2);
+
   stdout = stdin = &uart_io;
+
   UART_init(checkData);
-  DriveArray STPArray1 = {2, 3, 4, 0, 0, 0, 1.8, 30};
+
+  DriveArray STPArray1 = {8, 9, 10, 0, 0, 0, 1.8, 3};
   pololu STP1 = newPololuFA(STPArray1);
   STEPPER PAP1;
   PAP1.motor = &STP1;
   PAP1.enabled = 0;
   PAParray[0] = &PAP1;
+
+  setPCInt(6);
+  setPCInt(7);
+
   sei();
+
+  setPin(13, OUTPUT);
+  printf("Setup complete\n");
 
   while (1) {
     switch (estado) {
@@ -55,5 +62,21 @@ int main(void) {
   return 0;
 }
 
-void findecarrera1() { raceEnd(0, START); };
-void findecarrera2() { raceEnd(0, END); };
+void findecarrera1() {
+  if (readDPin(2)) {
+    togglePin(13);
+    raceEnd(0, START);
+  };
+}
+void findecarrera2() {
+  if (readDPin(3)) {
+    togglePin(13);
+    raceEnd(0, END);
+  };
+};
+
+ISR(PCINT2_vect) {
+  _delay_ms(15);
+  findecarrera1();
+  findecarrera2();
+};

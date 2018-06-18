@@ -5,8 +5,8 @@
   #define INIT_STEPPS 30000
 #endif
 //Define this if you want uart enabled printf() variable report on certain functions
-#ifndef UART
-  #define UART
+#define UART
+#ifdef UART
   #define BAUD 57600
   #define UART_DEBBUG
   unsigned short int UARTSetted;
