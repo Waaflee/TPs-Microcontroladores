@@ -17,3 +17,6 @@
 [submodule "SPI/comunicacion-esp8266/lib/AVRDuino"]
 	path = SPI/comunicacion-esp8266/lib/AVRDuino
 	url = git@github.com:Waaflee/AVRDuino.git
+[submodule "Interrupciones/ejercicio_3/lib/AVRDuino"]
+	path = Interrupciones/ejercicio_3/lib/AVRDuino
+	url = git@github.com:Waaflee/AVRDuino.git
