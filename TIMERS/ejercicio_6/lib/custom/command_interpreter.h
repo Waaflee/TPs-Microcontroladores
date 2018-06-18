@@ -7,5 +7,6 @@
 #include "../AVRDuino/timers.h"
 
 struct pwm1 pwm;
+volatile uint16_t V;
 
 void checkData(char data[]);

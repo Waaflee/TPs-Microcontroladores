@@ -1,7 +1,7 @@
 #include "command_interpreter.h"
 
 void checkData(char data[]) {
-  char temp[4];
+  char temp[10];
   uint16_t arg;
 
   // evitamos repetición de codigo precalculando el valor numerico de la orden
@@ -18,17 +18,11 @@ void checkData(char data[]) {
     printf("Error not enought arguments\n");
     return;
   }
-
   switch (data[1]) {
-  case 'D':
-    if (UARTcount > 5) {
-      printf("Argumment too long, duty cycle = %u\n", pwm.dutyA(NaN));
-    } else if (UARTcount < 3) {
-      printf("No argument, duty cycle = %u\n", pwm.dutyA(NaN));
-    } else {
-      pwm.dutyA(pt1000(arg));
-      printf("%s\n", data);
-    }
+  case 'V':
+    // La velocidad se espera en forma porcentual
+    V = pt100(arg);
+    printf("%s\n", data);
     break;
   default:
     printf("Command not Found\n");
