@@ -175,7 +175,7 @@ ISR(TIMER0_OVF_vect, ISR_NOBLOCK) {
         // Calculates amount of overflows until next stepp accordingly to
         // current stepper's RPM
         if (PAParray[i]->motor->stepps > PAParray[i]->motor->accelStepps[1]) {
-          delay = 6 * PAParray[i]->motor->RPM;
+          delay = 7 * PAParray[i]->motor->RPM;
           // sin prescaler el overflow ocurre a 62500 HZ,
           // para aceptar la consigna en decima de ms
           // debemos multiplicar por 6 ~10000Hz = 0.1ms

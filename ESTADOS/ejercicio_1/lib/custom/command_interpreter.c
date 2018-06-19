@@ -70,7 +70,7 @@ void checkData(char data[]) {
     rotateNSteps(arg, PAParray[0], BACKWARD);
     break;
   case 'T':
-    setSpeed(arg, PAParray[0]);
+    ICR1 = 200 * arg;
     break;
   case 'S':
     switch (estado) {
